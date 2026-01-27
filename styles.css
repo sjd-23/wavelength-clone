@@ -109,3 +109,136 @@ body {
     flex: 1;
     background-color: #e8d2a0;
 }
+
+.main-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 10px;
+    user-select: none;
+}
+
+.menu-title {
+    color: #00165c;
+    font-size: 36px;
+    font-weight: 750;
+    margin: 0;
+    text-align: center;
+    line-height: 1.2;
+    animation: wave 3s linear infinite;
+}
+
+@keyframes wave {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(1deg);
+    }
+    75% {
+        transform: rotate(-1deg);
+    }
+}
+
+.menu-box {
+    padding: 25px 40px;
+    box-shadow: 0 10px 30px rgba(0, 22, 92, 0.07);
+    position: relative;
+    background: #c3ae80;
+    z-index: 1;
+}
+
+@property --angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+
+.menu-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 3px;
+    --angle: 0deg;
+    background: conic-gradient(
+            from var(--angle),
+            #ff6b6b,
+            #4ecdc4,
+            #45b7d1,
+            #f7b731,
+            #ff6b6b
+    );
+    -webkit-mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+    mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    z-index: -1;
+    animation: gradient-rotate 20s linear infinite;
+}
+
+@keyframes gradient-rotate {
+    to {
+        --angle: 360deg;
+    }
+}
+
+.menu-btn {
+    width: 200px;
+    padding: 5px 15px;
+    font-family: 'Roboto', sans-serif;
+    color: white;
+    background-color: #00165c;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: padding 0.08s ease;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    z-index: 2;
+}
+
+.menu-btn:hover {
+    padding-left: 25px;
+}
+
+.menu-btn::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 100%;
+    background: linear-gradient(to bottom, #a029c8, #4ecdc4, #0c73c8, #f73131);
+    transition: width 0.08s ease;
+}
+
+.menu-btn:hover::after {
+    width: 10px;
+}
+
+.btn-title {
+    position: relative;
+    z-index: 1;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.btn-subtitle {
+    position: relative;
+    z-index: 1;
+    font-size: 14px;
+    font-weight: 300;
+    opacity: 0.9;
+}
