@@ -1,0 +1,111 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Roboto', sans-serif;
+}
+
+#header {
+    flex-shrink: 0;
+    display: flex;
+    align-items: stretch;
+    padding: 0;
+    background-color: #00165c;
+    user-select: none;
+}
+
+.color-blocks {
+    display: flex;
+}
+
+
+.color-blocks span {
+    border-radius: 0;
+    width: 25px;
+    flex: 0 0 auto;
+}
+
+.header-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px;
+    color: white;
+}
+
+#header h1 {
+    margin: 0;
+    white-space: nowrap;
+}
+
+.subheader {
+    margin: 5px 0 0 0;
+    font-size: 14px;
+    font-weight: 300;
+    opacity: 0.9;
+}
+
+.subheader a {
+    color: white;
+    text-decoration: none;
+    font-weight: 800;
+    transition: font-weight 0.3s ease;
+    background: linear-gradient(
+            90deg,
+            #ff6b6b,
+            #4ecdc4,
+            #45b7d1,
+            #f7b731,
+            #ff6b6b
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+.subheader a:hover {
+    font-weight: 800;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 2s linear infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 0% center;
+    }
+    100% {
+        background-position: 200% center;
+    }
+}
+
+.credit-box {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    max-width: 250px;
+}
+
+.credit-box p {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 300;
+    color: white;
+    opacity: 0.9;
+}
+
+.credit-box a {
+    color: white;
+    text-decoration: none;
+    font-weight: 400;
+}
+
+.credit-box a:hover {
+    text-decoration: underline;
+}
+
+#game {
+    flex: 1;
+    background-color: #e8d2a0;
+}
