@@ -108,6 +108,7 @@ body {
 #game {
     flex: 1;
     background-color: #e8d2a0;
+    overflow: hidden;
 }
 
 .main-menu {
@@ -241,4 +242,231 @@ body {
     font-size: 14px;
     font-weight: 300;
     opacity: 0.9;
+}
+
+.game-screen {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    height: 100%;
+    padding: 40px;
+    padding-top: 60px;
+}
+
+.game-content {
+    text-align: center;
+}
+
+.game-content h2 {
+    color: #00165c;
+    font-size: 32px;
+    margin-bottom: 40px;
+}
+
+#dial-container {
+    width: 800px;
+    height: 450px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dial-svg {
+    user-select: none;
+}
+
+.game-btn {
+    padding: 10px 20px;
+    margin-bottom: 30px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: white;
+    background-color: #00165c;
+    border: none;
+    cursor: pointer;
+    transition: all 0.1s ease;
+}
+
+.game-btn:hover {
+    background-color: #4ecdc4;
+    transform: translateY(-2px);
+}
+
+.prompt-display {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 800px;
+    margin: 15px auto 0;
+    padding: 10px 20px;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 4px 5px rgba(0, 22, 92, 0.1);
+    transition: background 0.3s ease;
+    box-sizing: border-box;
+}
+
+.prompt-left,
+.prompt-right {
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+    width: 50%;
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 1);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.prompt-left {
+    text-align: left;
+    padding-left: 10px;
+}
+
+.prompt-right {
+    text-align: right;
+    padding-right: 10px;
+}
+
+.phase-indicator {
+    font-size: 32px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 25px;
+    padding-bottom: 2px;
+    text-align: center;
+    border-bottom: 7px solid white;
+    display: inline-block;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.game-content {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.game-screen {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    height: 100%;
+    padding: 40px;
+    padding-top: 60px;
+    position: relative;
+}
+
+.scoreboard {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: white;
+    padding: 12px;
+    box-shadow: 0 2px 6px rgba(0, 22, 92, 0.15);
+    width: 140px;
+    opacity: 0.3;
+    border-radius: 6px;
+    transition: opacity 0.3s ease;
+}
+
+.scoreboard:hover {
+    opacity: 1;
+}
+
+.scoreboard h2 {
+    color: #00165c;
+    font-size: 13px;
+    margin: 0 0 8px 0;
+    text-align: center;
+    border-bottom: 2px solid #4ecdc4;
+    padding-bottom: 4px;
+}
+
+.score-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 8px;
+    margin-bottom: 4px;
+    background: #f5f5f5;
+    border-radius: 4px;
+}
+
+.score-item:last-child {
+    margin-bottom: 0;
+}
+
+.player-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: #00165c;
+}
+
+.player-score {
+    font-size: 18px;
+    font-weight: 700;
+    color: #4ecdc4;
+}
+
+.psychic-indicator {
+    font-size: 11px;
+    margin-left: 4px;
+}
+
+.setup-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.setup-content {
+    background: white;
+    padding: 10px;
+    box-shadow: 0 4px 15px rgba(0, 22, 92, 0.2);
+    max-width: 400px;
+    width: 100%;
+}
+
+.setup-content h1 {
+    color: #00165c;
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 35px;
+}
+
+.setup-section {
+    margin-bottom: 25px;
+}
+
+.setup-section label {
+    display: block;
+    color: #00165c;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 16px;
+}
+
+.setup-section input,
+.setup-section select {
+    width: 100%;
+    padding: 5px;
+    font-size: 14px;
+    border: 2px solid #f7b731;
+    font-family: 'Roboto', sans-serif;
+    box-sizing: border-box;
+}
+
+.setup-section input:focus,
+.setup-section select:focus {
+    outline: none;
+    border-color: #00165c;
+}
+
+#start-game-btn {
+    width: 100%;
+    margin-top: 10px;
 }
