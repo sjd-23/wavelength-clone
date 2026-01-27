@@ -5,6 +5,7 @@ body {
     display: flex;
     flex-direction: column;
     font-family: 'Roboto', sans-serif;
+    user-select: none;
 }
 
 #header {
@@ -289,7 +290,7 @@ body {
 }
 
 .game-btn:hover {
-    background-color: #4ecdc4;
+    background-color: #45b7d1;
     transform: translateY(-2px);
 }
 
@@ -301,7 +302,6 @@ body {
     margin: 15px auto 0;
     padding: 10px 20px;
     background: white;
-    border-radius: 5px;
     box-shadow: 0 4px 5px rgba(0, 22, 92, 0.1);
     transition: background 0.3s ease;
     box-sizing: border-box;
@@ -335,11 +335,22 @@ body {
     font-weight: 700;
     color: white;
     margin-bottom: 25px;
-    padding-bottom: 2px;
+    padding-bottom: 3px;
     text-align: center;
-    border-bottom: 7px solid white;
+    border-bottom: 5px solid white;
     display: inline-block;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.phase-title {
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.phase-subtitle {
+    font-size: 18px;
+    font-weight: 450;
+    margin-top: 1px;
 }
 
 .game-content {
@@ -368,8 +379,7 @@ body {
     box-shadow: 0 2px 6px rgba(0, 22, 92, 0.15);
     width: 140px;
     opacity: 0.3;
-    border-radius: 6px;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.1s ease;
 }
 
 .scoreboard:hover {
@@ -379,10 +389,8 @@ body {
 .scoreboard h2 {
     color: #00165c;
     font-size: 13px;
-    margin: 0 0 8px 0;
+    margin: 0 0 2px 0;
     text-align: center;
-    border-bottom: 2px solid #4ecdc4;
-    padding-bottom: 4px;
 }
 
 .score-item {
@@ -392,7 +400,6 @@ body {
     padding: 6px 8px;
     margin-bottom: 4px;
     background: #f5f5f5;
-    border-radius: 4px;
 }
 
 .score-item:last-child {
@@ -405,17 +412,6 @@ body {
     color: #00165c;
 }
 
-.player-score {
-    font-size: 18px;
-    font-weight: 700;
-    color: #4ecdc4;
-}
-
-.psychic-indicator {
-    font-size: 11px;
-    margin-left: 4px;
-}
-
 .setup-screen {
     display: flex;
     align-items: center;
@@ -424,49 +420,191 @@ body {
 }
 
 .setup-content {
-    background: white;
-    padding: 10px;
-    box-shadow: 0 4px 15px rgba(0, 22, 92, 0.2);
-    max-width: 400px;
+    background: #ffffff;
+    padding: 25px 30px;
+    box-shadow: 0 2px 8px rgba(0, 22, 92, 0.15);
+    max-width: 480px;
     width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+.setup-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 3px;
+    --angle: 0deg;
+    background: conic-gradient(
+            from var(--angle),
+            #ff6b6b,
+            #4ecdc4,
+            #45b7d1,
+            #f7b731,
+            #ff6b6b
+    );
+    -webkit-mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+    mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    z-index: -1;
+    animation: gradient-rotate 20s linear infinite;
 }
 
 .setup-content h1 {
     color: #00165c;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 26px;
     text-align: center;
-    margin-bottom: 15px;
-    font-size: 35px;
 }
 
-.setup-section {
-    margin-bottom: 25px;
+.madlib-text {
+    margin-bottom: 20px;
 }
 
-.setup-section label {
-    display: block;
+.madlib-text p {
     color: #00165c;
-    font-weight: 600;
-    margin-bottom: 8px;
-    font-size: 16px;
+    font-size: 17px;
+    line-height: 1.8;
+    margin: 0 0 6px 0;
 }
 
-.setup-section input,
-.setup-section select {
-    width: 100%;
-    padding: 5px;
-    font-size: 14px;
-    border: 2px solid #f7b731;
+.madlib-text strong {
+    font-weight: 700;
+}
+
+.madlib-text input {
+    padding: 2px 6px;
+    font-size: 17px;
+    border: none;
+    border-bottom: 1px solid #ccc;
     font-family: 'Roboto', sans-serif;
-    box-sizing: border-box;
+    background: transparent;
+    color: #00165c;
+    min-width: 100px;
 }
 
-.setup-section input:focus,
-.setup-section select:focus {
+.madlib-text input[type="number"] {
+    width: 50px;
+    min-width: 50px;
+    text-align: center;
+}
+
+.madlib-text input:focus {
     outline: none;
-    border-color: #00165c;
+    border-bottom-color: #00165c;
 }
 
 #start-game-btn {
     width: 100%;
-    margin-top: 10px;
+}
+
+.end-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.end-content {
+    background: white;
+    padding: 25px 30px;
+    box-shadow: 0 2px 8px rgba(0, 22, 92, 0.15);
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+.end-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 3px;
+    --angle: 0deg;
+    background: conic-gradient(
+            from var(--angle),
+            #ff6b6b,
+            #4ecdc4,
+            #45b7d1,
+            #f7b731,
+            #ff6b6b
+    );
+    -webkit-mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+    mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    z-index: -1;
+    animation: gradient-rotate 20s linear infinite;
+}
+
+.winner-name {
+    font-weight: 800;
+    background: linear-gradient(
+            90deg,
+            #ff6b6b,
+            #4ecdc4,
+            #45b7d1,
+            #f7b731,
+            #ff6b6b
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 2s linear infinite;
+}
+
+.end-content h1 {
+    color: #00165c;
+    font-size: 26px;
+    margin: 0 0 15px 0;
+}
+
+.final-scores {
+    margin-bottom: 20px;
+}
+
+.final-score-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 15px;
+    margin-bottom: 8px;
+    background: #f5f5f5;
+    font-size: 16px;
+    color: #00165c;
+    font-weight: 600;
+}
+
+.final-score-item:last-child {
+    margin-bottom: 0;
+}
+
+.end-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.end-buttons .game-btn {
+    flex: 1;
+    margin: 0;
+    padding: 12px 15px;
+    font-size: 16px;
 }

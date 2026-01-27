@@ -23,21 +23,13 @@ export class Game {
         setupScreen.className = 'setup-screen';
         setupScreen.innerHTML = `
         <div class="setup-content">
-                <h1>Game Setup</h1>
+                <h1>Game Configuration</h1>
                 
-                <div class="setup-section">
-                    <label for="player1-name">Player 1 Name:</label>
-                    <input type="text" id="player1-name" placeholder="Player 1" maxlength="15">
-                </div>
-                
-                <div class="setup-section">
-                    <label for="player2-name">Player 2 Name:</label>
-                    <input type="text" id="player2-name" placeholder="Player 2" maxlength="15">
-                </div>
-                
-                <div class="setup-section">
-                    <label for="win-score">Play to:</label>
-                    <input type="number" id="win-score" placeholder="10" min="1" max="100" value="10">
+                <div class="madlib-text">
+                    <p>Playing <strong>Local Two Player</strong> mode</p>
+                    <p>Player 1 is called <input type="text" id="player1-name" placeholder="Player 1" maxlength="15"></p>
+                    <p>Player 2 is called <input type="text" id="player2-name" placeholder="Player 2" maxlength="15"></p>
+                    <p>Playing to <input type="number" id="win-score" value="10" min="1" max="100"> points</p>
                 </div>
                 
                 <button id="start-game-btn" class="game-btn">Start Game</button>
@@ -66,7 +58,10 @@ export class Game {
         gameScreen.className = 'game-screen';
         gameScreen.innerHTML = `
             <div class="game-content">
-                <div id="phase-indicator" class="phase-indicator">Psychic Phase</div>
+                <div id="phase-indicator" class="phase-indicator">
+                    <div class="phase-title">Psychic Phase</div>
+                    <div class="phase-subtitle">${this.player1Name}'s turn!</div>
+                </div>
                 <button id="start-round-btn" class="game-btn">Uncover board!</button>
                 <div id="dial-container"></div>
                 <div id="prompt-display" class="prompt-display">
@@ -102,7 +97,12 @@ export class Game {
         this.updatePsychicIndicator();
 
         const setupRound = () => {
-            phaseIndicator.textContent = 'Psychic Phase';
+            const phaseTitle = phaseIndicator.querySelector('.phase-title');
+            const phaseSubtitle = phaseIndicator.querySelector('.phase-subtitle');
+
+            phaseTitle.textContent = 'Psychic Phase';
+            phaseSubtitle.textContent = `${this.currentPlayer === 1 ? this.player1Name : this.player2Name}'s turn!`;
+
             this.updatePsychicIndicator();
 
             this.currentPrompt = getRandomPrompt();
@@ -121,7 +121,8 @@ export class Game {
 
             startBtn.textContent = 'Cover and begin!';
             startBtn.onclick = () => {
-                phaseIndicator.textContent = 'Team Phase';
+                phaseTitle.textContent = 'Team Phase';
+                phaseSubtitle.textContent = `${this.currentPlayer === 1 ? this.player2Name : this.player1Name}'s turn!`;
 
                 dial.showCover();
                 startBtn.textContent = 'Lock guess!';
@@ -152,6 +153,13 @@ export class Game {
 
                     startBtn.textContent = `${points} Points! Click for Next Round`;
                     startBtn.onclick = () => {
+                        const winner = this.checkWinner();
+
+                        if (winner) {
+                            this.renderEndScreen(winner);
+                            return;
+                        }
+
                         this.currentPlayer = this.currentPlayer === 1 ? 2 : 1;
 
                         promptLeft.textContent = '?';
@@ -173,6 +181,53 @@ export class Game {
         };
 
         startBtn.onclick = setupRound;
+    }
+
+    checkWinner() {
+        if (this.score.player1 >= this.winScore) {
+            return this.player1Name;
+        } else if (this.score.player2 >= this.winScore) {
+            return this.player2Name;
+        }
+        return null;
+    }
+
+    renderEndScreen(winner) {
+        this.gameContainer.innerHTML = '';
+
+        const endScreen = document.createElement('div');
+        endScreen.className = 'end-screen';
+        endScreen.innerHTML = `
+        <div class="end-content">
+                <h1>Game Over, <span class="winner-name">${winner}</span> Wins!</h1>
+                <div class="final-scores">
+                    <div class="final-score-item">
+                        <span>${this.player1Name}</span>
+                        <span>${this.score.player1} points</span>
+                    </div>
+                    <div class="final-score-item">
+                        <span>${this.player2Name}</span>
+                        <span>${this.score.player2} points</span>
+                    </div>
+                </div>
+                <div class="end-buttons">
+                    <button id="play-again-btn" class="game-btn">Play Again</button>
+                    <button id="exit-btn" class="game-btn">Exit to Menu</button>
+                </div>
+            </div>
+        `;
+
+        this.gameContainer.appendChild(endScreen);
+
+        document.getElementById('play-again-btn').addEventListener('click', () => {
+            this.score = { player1: 0, player2: 0 };
+            this.currentPlayer = 1;
+            this.renderGameScreen();
+        });
+
+        document.getElementById('exit-btn').addEventListener('click', () => {
+            location.reload();
+        });
     }
 
     getRandomColor() {
