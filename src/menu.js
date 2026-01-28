@@ -9,18 +9,28 @@ export function initMenu() {
     onlineBtn.addEventListener('click', startOnlineGame);
 }
 
-function startLocalGame() {
+export function showMenu() {
     const mainMenu = document.querySelector('.main-menu');
-    mainMenu.style.display = 'none';
+    if (mainMenu) {
+        mainMenu.style.display = 'flex';
+    }
+}
 
+export function hideMenu() {
+    const mainMenu = document.querySelector('.main-menu');
+    if (mainMenu) {
+        mainMenu.style.display = 'none';
+    }
+}
+
+function startLocalGame() {
+    hideMenu();
     const game = new Game();
     game.start();
 }
 
 function startOnlineGame() {
-    const mainMenu = document.querySelector('.main-menu');
-    mainMenu.style.display = 'none';
-
+    hideMenu();
     const onlineGame = new OnlineGame();
     onlineGame.start();
 }
