@@ -21,7 +21,6 @@ body {
     display: flex;
 }
 
-
 .color-blocks span {
     border-radius: 0;
     width: 25px;
@@ -53,14 +52,7 @@ body {
     text-decoration: none;
     font-weight: 800;
     transition: font-weight 0.3s ease;
-    background: linear-gradient(
-            90deg,
-            #ff6b6b,
-            #4ecdc4,
-            #45b7d1,
-            #f7b731,
-            #ff6b6b
-    );
+    background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #f7b731, #ff6b6b);
     background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;
@@ -73,12 +65,8 @@ body {
 }
 
 @keyframes shimmer {
-    0% {
-        background-position: 0% center;
-    }
-    100% {
-        background-position: 200% center;
-    }
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
 }
 
 .credit-box {
@@ -133,15 +121,9 @@ body {
 }
 
 @keyframes wave {
-    0%, 100% {
-        transform: rotate(0deg);
-    }
-    25% {
-        transform: rotate(1deg);
-    }
-    75% {
-        transform: rotate(-1deg);
-    }
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(1deg); }
+    75% { transform: rotate(-1deg); }
 }
 
 .menu-box {
@@ -158,7 +140,9 @@ body {
     inherits: false;
 }
 
-.menu-box::before {
+.menu-box::before,
+.setup-content::before,
+.end-content::before {
     content: '';
     position: absolute;
     top: 0;
@@ -167,20 +151,9 @@ body {
     bottom: 0;
     padding: 3px;
     --angle: 0deg;
-    background: conic-gradient(
-            from var(--angle),
-            #ff6b6b,
-            #4ecdc4,
-            #45b7d1,
-            #f7b731,
-            #ff6b6b
-    );
-    -webkit-mask:
-            linear-gradient(#fff 0 0) content-box,
-            linear-gradient(#fff 0 0);
-    mask:
-            linear-gradient(#fff 0 0) content-box,
-            linear-gradient(#fff 0 0);
+    background: conic-gradient(from var(--angle), #ff6b6b, #4ecdc4, #45b7d1, #f7b731, #ff6b6b);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     z-index: -1;
@@ -188,14 +161,13 @@ body {
 }
 
 @keyframes gradient-rotate {
-    to {
-        --angle: 360deg;
-    }
+    to { --angle: 360deg; }
 }
 
 .menu-btn {
     width: 200px;
     padding: 5px 15px;
+    margin-bottom: 4px;
     font-family: 'Roboto', sans-serif;
     color: white;
     background-color: #00165c;
@@ -252,10 +224,14 @@ body {
     height: 100%;
     padding: 40px;
     padding-top: 60px;
+    position: relative;
 }
 
 .game-content {
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .game-content h2 {
@@ -292,6 +268,18 @@ body {
 .game-btn:hover {
     background-color: #45b7d1;
     transform: translateY(-2px);
+}
+
+.game-btn:disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.game-btn:disabled:hover {
+    background-color: #ccc;
+    transform: none;
 }
 
 .prompt-display {
@@ -353,23 +341,6 @@ body {
     margin-top: 1px;
 }
 
-.game-content {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.game-screen {
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    height: 100%;
-    padding: 40px;
-    padding-top: 60px;
-    position: relative;
-}
-
 .scoreboard {
     position: absolute;
     top: 10px;
@@ -380,6 +351,7 @@ body {
     width: 140px;
     opacity: 0.3;
     transition: opacity 0.1s ease;
+    z-index: 10;
 }
 
 .scoreboard:hover {
@@ -412,14 +384,73 @@ body {
     color: #00165c;
 }
 
-.setup-screen {
+.player-score {
+    font-size: 14px;
+    font-weight: 700;
+    color: #00165c;
+}
+
+.team-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.team-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #00165c;
+}
+
+.team-members {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+}
+
+.player-tag {
+    font-size: 9px;
+    font-weight: 600;
+    padding: 2px 5px;
+    border-radius: 3px;
+    color: white;
+}
+
+.score-notification {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 6px;
+    padding: 8px 12px;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0, 22, 92, 0.15);
+}
+
+.score-notification.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.score-points {
+    font-size: 14px;
+    font-weight: 700;
+    color: #00165c;
+}
+
+.setup-screen,
+.end-screen {
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100%;
 }
 
-.setup-content {
+.setup-content,
+.end-content {
     background: #ffffff;
     padding: 25px 30px;
     box-shadow: 0 2px 8px rgba(0, 22, 92, 0.15);
@@ -429,41 +460,27 @@ body {
     z-index: 1;
 }
 
-.setup-content::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    padding: 3px;
-    --angle: 0deg;
-    background: conic-gradient(
-            from var(--angle),
-            #ff6b6b,
-            #4ecdc4,
-            #45b7d1,
-            #f7b731,
-            #ff6b6b
-    );
-    -webkit-mask:
-            linear-gradient(#fff 0 0) content-box,
-            linear-gradient(#fff 0 0);
-    mask:
-            linear-gradient(#fff 0 0) content-box,
-            linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    z-index: -1;
-    animation: gradient-rotate 20s linear infinite;
-}
-
-.setup-content h1 {
+.setup-content h1,
+.end-content h1 {
     color: #00165c;
     margin-top: 0;
     margin-bottom: 20px;
     font-size: 26px;
     text-align: center;
+}
+
+.lobby-content {
+    width: 450px;
+    max-width: 450px;
+    min-width: 450px;
+}
+
+.end-content {
+    max-width: 400px;
+}
+
+.end-content h1 {
+    margin-bottom: 15px;
 }
 
 .madlib-text {
@@ -507,74 +524,14 @@ body {
     width: 100%;
 }
 
-.end-screen {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-}
-
-.end-content {
-    background: white;
-    padding: 25px 30px;
-    box-shadow: 0 2px 8px rgba(0, 22, 92, 0.15);
-    text-align: center;
-    max-width: 400px;
-    width: 100%;
-    position: relative;
-    z-index: 1;
-}
-
-.end-content::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    padding: 3px;
-    --angle: 0deg;
-    background: conic-gradient(
-            from var(--angle),
-            #ff6b6b,
-            #4ecdc4,
-            #45b7d1,
-            #f7b731,
-            #ff6b6b
-    );
-    -webkit-mask:
-            linear-gradient(#fff 0 0) content-box,
-            linear-gradient(#fff 0 0);
-    mask:
-            linear-gradient(#fff 0 0) content-box,
-            linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    z-index: -1;
-    animation: gradient-rotate 20s linear infinite;
-}
-
 .winner-name {
     font-weight: 800;
-    background: linear-gradient(
-            90deg,
-            #ff6b6b,
-            #4ecdc4,
-            #45b7d1,
-            #f7b731,
-            #ff6b6b
-    );
+    background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #f7b731, #ff6b6b);
     background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: shimmer 2s linear infinite;
-}
-
-.end-content h1 {
-    color: #00165c;
-    font-size: 26px;
-    margin: 0 0 15px 0;
 }
 
 .final-scores {
@@ -596,15 +553,166 @@ body {
     margin-bottom: 0;
 }
 
-.end-buttons {
+.end-buttons,
+.lobby-buttons {
     display: flex;
     gap: 10px;
-    justify-content: center;
+}
+
+.lobby-buttons {
+    margin-top: 20px;
+}
+
+.lobby-buttons-bottom {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.end-buttons .game-btn,
+.lobby-buttons .game-btn,
+.lobby-buttons-bottom .game-btn {
+    flex: 1;
+    margin: 0;
 }
 
 .end-buttons .game-btn {
-    flex: 1;
-    margin: 0;
     padding: 12px 15px;
     font-size: 16px;
+}
+
+.compact-room-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 10px;
+    background: #f5f5f5;
+}
+
+.room-code-compact {
+    font-size: 16px;
+    color: #00165c;
+}
+
+.room-code {
+    font-weight: 700;
+    font-size: 20px;
+    color: #4ecdc4;
+    letter-spacing: 2px;
+}
+
+.copy-btn {
+    padding: 6px 12px;
+    background: #4ecdc4;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.2s ease;
+}
+
+.copy-btn:hover {
+    background: #00165c;
+}
+
+.teams-container {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.team-column {
+    flex: 1;
+}
+
+.team-column h3 {
+    color: #00165c;
+    margin: 0 0 10px 0;
+    font-size: 16px;
+}
+
+.team-players {
+    min-height: 100px;
+}
+
+.player-card {
+    padding: 8px 10px;
+    margin-bottom: 6px;
+    background: #f5f5f5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: white;
+    font-weight: 600;
+    transition: background 0.2s ease;
+    min-height: 36px;
+    box-sizing: border-box;
+}
+
+.leave-team-btn {
+    padding: 2px 6px;
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    transition: background 0.2s ease;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.leave-team-btn:hover {
+    background: #ff4757;
+}
+
+.join-team-btn {
+    width: 100%;
+    padding: 8px;
+    background: #4ecdc4;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.2s ease;
+}
+
+.join-team-btn:hover {
+    background: #00165c;
+}
+
+.unassigned-players {
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #f5f5f5;
+    color: #00165c;
+    font-size: 14px;
+}
+
+.unassigned-players h4 {
+    margin: 0 0 5px 0;
+    font-size: 14px;
+}
+
+.danger-btn {
+    background-color: #ff6b6b;
+}
+
+.danger-btn:hover {
+    background-color: #ff4757;
+}
+
+.ready {
+    background-color: #4ecdc4;
+}
+
+.ready:hover {
+    background-color: #45b7d1;
 }
