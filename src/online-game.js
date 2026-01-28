@@ -653,7 +653,7 @@ export class OnlineGame {
         dial.lock();
 
         const phaseIndicator = document.getElementById('phase-indicator');
-        phaseIndicator.querySelector('.phase-title').textContent = 'Round Finished';
+        phaseIndicator.querySelector('.phase-title').textContent = 'Round Finished!';
         phaseIndicator.querySelector('.phase-subtitle').textContent = '';
 
         const actionBtn = document.getElementById('game-action-btn');
