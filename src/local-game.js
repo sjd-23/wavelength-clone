@@ -2,7 +2,8 @@ import { Dial } from './dial.js';
 import { getRandomPrompt } from '../shared/prompts.js';
 import { GAME_SETTINGS } from '../shared/game-constants.js';
 import { calculateScore, clampScore } from '../shared/game-logic.js';
-import { getTwoDistinctColors } from '../shared/color-utils.js';
+import { getTwoDistinctColors, getAvailableColor } from '../shared/color-utils.js';
+import { showMenu } from './menu.js';
 
 export class Game {
     constructor() {
@@ -13,6 +14,10 @@ export class Game {
         this.player1Name = 'Player 1';
         this.player2Name = 'Player 2';
         this.winScore = GAME_SETTINGS.DEFAULT_WIN_SCORE;
+        this.currentRound = 1;
+
+        this.player1Color = getAvailableColor([]);
+        this.player2Color = getAvailableColor([this.player1Color]);
     }
 
     start() {
@@ -20,26 +25,34 @@ export class Game {
     }
 
     renderSetupScreen() {
-        this.gameContainer.innerHTML = '';
+        const gameScreen = document.querySelector('.game-screen');
+        const endScreen = document.querySelector('.end-screen');
+        const setupScreen = document.querySelector('.setup-screen');
 
-        const setupScreen = document.createElement('div');
-        setupScreen.className = 'setup-screen';
-        setupScreen.innerHTML = `
-            <div class="setup-content">
-                <h1>Game Configuration</h1>
+        if (gameScreen) gameScreen.remove();
+        if (endScreen) endScreen.remove();
+        if (setupScreen) setupScreen.remove();
+
+        const newSetupScreen = document.createElement('div');
+        newSetupScreen.className = 'setup-screen';
+        newSetupScreen.innerHTML = `
+        <div class="setup-content">
+                <h1>Game Setup</h1>
                 
                 <div class="madlib-text">
-                    <p>Playing <strong>Local Two Player</strong> mode</p>
                     <p>Player 1 is called <input type="text" id="player1-name" placeholder="Player 1" maxlength="15"></p>
                     <p>Player 2 is called <input type="text" id="player2-name" placeholder="Player 2" maxlength="15"></p>
                     <p>Playing to <input type="number" id="win-score" value="${GAME_SETTINGS.DEFAULT_WIN_SCORE}" min="${GAME_SETTINGS.MIN_WIN_SCORE}" max="${GAME_SETTINGS.MAX_WIN_SCORE}"> points</p>
                 </div>
                 
-                <button id="start-game-btn" class="game-btn">Start Game</button>
+                <div class="lobby-buttons">
+                    <button id="back-btn" class="game-btn">Back</button>
+                    <button id="start-game-btn" class="game-btn">Begin Game</button>
+                </div>
             </div>
         `;
 
-        this.gameContainer.appendChild(setupScreen);
+        this.gameContainer.appendChild(newSetupScreen);
 
         document.getElementById('start-game-btn').addEventListener('click', () => {
             this.player1Name = document.getElementById('player1-name').value.trim() || 'Player 1';
@@ -49,65 +62,90 @@ export class Game {
 
             this.renderGameScreen();
         });
+
+        document.getElementById('back-btn').onclick = () => {
+            this.exitToMenu();
+        };
+    }
+
+    exitToMenu() {
+        const setupScreen = document.querySelector('.setup-screen');
+        const gameScreen = document.querySelector('.game-screen');
+        const endScreen = document.querySelector('.end-screen');
+
+        if (setupScreen) setupScreen.remove();
+        if (gameScreen) gameScreen.remove();
+        if (endScreen) endScreen.remove();
+
+        showMenu();
+
+        this.score = { player1: 0, player2: 0 };
+        this.currentPlayer = 1;
+        this.currentRound = 1;
     }
 
     renderGameScreen() {
-        this.gameContainer.innerHTML = '';
+        const setupScreen = document.querySelector('.setup-screen');
+        const endScreen = document.querySelector('.end-screen');
+        const gameScreen = document.querySelector('.game-screen');
 
-        const gameScreen = document.createElement('div');
-        gameScreen.className = 'game-screen';
-        gameScreen.innerHTML = `
+        if (setupScreen) setupScreen.remove();
+        if (endScreen) endScreen.remove();
+        if (gameScreen) gameScreen.remove();
+
+        const newGameScreen = document.createElement('div');
+        newGameScreen.className = 'game-screen';
+
+        const currentPlayerColor = this.currentPlayer === 1 ? this.player1Color : this.player2Color;
+        newGameScreen.innerHTML = `
             <div class="game-content">
-                <div id="phase-indicator" class="phase-indicator">
-                    <div class="phase-title">Psychic Phase</div>
-                    <div class="phase-subtitle">${this.getCurrentPlayerName()}'s turn!</div>
-                </div>
-                <button id="start-round-btn" class="game-btn">Uncover board!</button>
                 <div id="dial-container"></div>
                 <div id="prompt-display" class="prompt-display">
                     <span class="prompt-left">?</span>
                     <span class="prompt-right">?</span>
                 </div>
             </div>
-            <div class="scoreboard">
-                <h2>Scoreboard</h2>
-                <div class="score-item" data-player="1">
-                    <span class="player-name">${this.player1Name}</span>
-                    <span class="player-score">${this.score.player1}</span>
+            <div class="left-panel">
+                <div id="phase-indicator" class="phase-indicator">
+                    <div class="phase-title">Psychic Phase</div>
+                    <div class="phase-subtitle"><span style="background-color: ${currentPlayerColor}; padding: 1px 6px; border-radius: 3px; color: white; font-weight: 700; font-size: 14px;">${this.getCurrentPlayerName()}</span> is up!</div>
                 </div>
-                <div class="score-item" data-player="2">
-                    <span class="player-name">${this.player2Name}</span>
-                    <span class="player-score">${this.score.player2}</span>
+                <button id="start-round-btn" class="game-btn">Reveal Board</button>
+                <div class="scoreboard">
+                    <h2>Round ${this.currentRound}</h2>
+                    <div class="score-item" data-player="1">
+                        <span class="player-name" style="background-color: ${this.player1Color}; padding: 2px 6px; border-radius: 3px; color: white;">${this.player1Name}</span>
+                        <span class="player-score">${this.score.player1}</span>
+                    </div>
+                    <div class="score-item" data-player="2">
+                        <span class="player-name" style="background-color: ${this.player2Color}; padding: 2px 6px; border-radius: 3px; color: white;">${this.player2Name}</span>
+                        <span class="player-score">${this.score.player2}</span>
+                    </div>
                 </div>
             </div>
         `;
 
-        this.gameContainer.appendChild(gameScreen);
+        this.gameContainer.appendChild(newGameScreen);
 
         const dial = new Dial(document.getElementById('dial-container'));
         dial.render();
 
+        this.currentPrompt = getRandomPrompt();
+        dial.randomizeTarget();
+
         this.setupRoundHandlers(dial);
-        this.updatePsychicIndicator();
     }
 
     setupRoundHandlers(dial) {
         const startBtn = document.getElementById('start-round-btn');
-        const promptDisplay = document.getElementById('prompt-display');
-        const phaseIndicator = document.getElementById('phase-indicator');
+
+        dial.lock();
 
         const setupPsychicPhase = () => {
-            this.updatePhaseDisplay('Psychic Phase', `${this.getCurrentPlayerName()}'s turn!`);
-            this.updatePsychicIndicator();
-
-            this.currentPrompt = getRandomPrompt();
             this.updatePromptDisplay(this.currentPrompt);
-
-            dial.randomizeTarget();
-            dial.render();
             setTimeout(() => dial.hideCover(), 100);
 
-            startBtn.textContent = 'Cover and begin!';
+            startBtn.textContent = 'Cover Board';
             startBtn.onclick = () => this.setupGuessingPhase(dial, startBtn);
         };
 
@@ -115,10 +153,12 @@ export class Game {
     }
 
     setupGuessingPhase(dial, startBtn) {
-        this.updatePhaseDisplay('Team Phase', `${this.getOpponentName()}'s turn!`);
+        const opponentColor = this.currentPlayer === 1 ? this.player2Color : this.player1Color;
+        this.updatePhaseDisplay('Team Phase', `<span style="background-color: ${opponentColor}; padding: 1px 6px; border-radius: 3px; color: white; font-weight: 700; font-size: 14px;">${this.getOpponentName()}</span> is up!`);
 
         dial.showCover();
-        startBtn.textContent = 'Lock guess!';
+        dial.unlock();
+        startBtn.textContent = 'Lock Guess';
         startBtn.onclick = () => this.handleGuessLock(dial, startBtn);
     }
 
@@ -129,7 +169,7 @@ export class Game {
         const points = calculateScore(dial.angle, dial.targetAngle);
         this.updateScore(points);
 
-        startBtn.textContent = `${points} Points! Click for Next Round`;
+        startBtn.textContent = `Continue...`;
         startBtn.onclick = () => this.handleNextRound(dial, startBtn);
     }
 
@@ -141,22 +181,38 @@ export class Game {
         }
 
         this.currentPlayer = this.currentPlayer === 1 ? 2 : 1;
+        this.currentRound++;
         this.resetPromptDisplay();
 
         setTimeout(() => dial.showCover(), 100);
         dial.angle = GAME_SETTINGS.DEFAULT_DIAL_ANGLE;
-        dial.unlock();
-        dial.render();
 
-        startBtn.textContent = 'Uncover board!';
-        startBtn.onclick = () => this.setupRoundHandlers(dial);
+        this.currentPrompt = getRandomPrompt();
 
+        setTimeout(() => {
+            dial.randomizeTarget();
+            dial.lock();
+        }, 400);
+
+        startBtn.textContent = 'Uncover Board';
+
+        const setupPsychicPhase = () => {
+            this.updatePromptDisplay(this.currentPrompt);
+            setTimeout(() => dial.hideCover(), 100);
+            startBtn.textContent = 'Cover Board';
+            startBtn.onclick = () => this.setupGuessingPhase(dial, startBtn);
+        };
+
+        startBtn.onclick = setupPsychicPhase;
+
+        this.updateScoreboardRound();
+
+        const currentPlayerColor = this.currentPlayer === 1 ? this.player1Color : this.player2Color;
         const phaseIndicator = document.getElementById('phase-indicator');
         const phaseTitle = phaseIndicator.querySelector('.phase-title');
         const phaseSubtitle = phaseIndicator.querySelector('.phase-subtitle');
         phaseTitle.textContent = 'Psychic Phase';
-        phaseSubtitle.textContent = `${this.getCurrentPlayerName()}'s turn!`;
-        this.updatePsychicIndicator();
+        phaseSubtitle.innerHTML = `<span style="background-color: ${currentPlayerColor}; padding: 1px 6px; border-radius: 3px; color: white; font-weight: 700; font-size: 14px;">${this.getCurrentPlayerName()}</span> is up!`;
     }
 
     updateScore(points) {
@@ -169,12 +225,46 @@ export class Game {
         const scoreItems = document.querySelectorAll('.score-item');
         scoreItems[0].querySelector('.player-score').textContent = this.score.player1;
         scoreItems[1].querySelector('.player-score').textContent = this.score.player2;
+
+        this.showScoreNotification(points);
+    }
+
+    showScoreNotification(points) {
+        const colorMap = {
+            0: '#ffffff',
+            2: '#feca57',
+            3: '#ff9f43',
+            4: '#45b7d1'
+        };
+
+        const notification = document.createElement('div');
+        notification.className = 'score-notification';
+        notification.style.backgroundColor = colorMap[points] || '#ffffff';
+        notification.innerHTML = `<span class="score-points">+${points} point${points !== 1 ? 's' : ''}</span>`;
+
+        const scoreboard = document.querySelector('.scoreboard');
+        scoreboard.appendChild(notification);
+
+        setTimeout(() => notification.classList.add('show'), 10);
+
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => notification.remove(), 300);
+        }, 5000);
+    }
+
+    updateScoreboardRound() {
+        const scoreboard = document.querySelector('.scoreboard');
+        const roundHeader = scoreboard.querySelector('h2');
+        if (roundHeader) {
+            roundHeader.textContent = `Round ${this.currentRound}`;
+        }
     }
 
     updatePhaseDisplay(title, subtitle) {
         const phaseIndicator = document.getElementById('phase-indicator');
         phaseIndicator.querySelector('.phase-title').textContent = title;
-        phaseIndicator.querySelector('.phase-subtitle').textContent = subtitle;
+        phaseIndicator.querySelector('.phase-subtitle').innerHTML = subtitle;
     }
 
     updatePromptDisplay(prompt) {
@@ -207,29 +297,27 @@ export class Game {
         return null;
     }
 
-    updatePsychicIndicator() {
-        const scoreItems = document.querySelectorAll('.score-item');
-        scoreItems.forEach((item, index) => {
-            const playerName = item.querySelector('.player-name');
-            playerName.style.color = (index + 1 === this.currentPlayer) ? '#ff6b6b' : '#00165c';
-        });
-    }
-
     renderEndScreen(winner) {
-        this.gameContainer.innerHTML = '';
+        const setupScreen = document.querySelector('.setup-screen');
+        const gameScreen = document.querySelector('.game-screen');
+        const endScreen = document.querySelector('.end-screen');
 
-        const endScreen = document.createElement('div');
-        endScreen.className = 'end-screen';
-        endScreen.innerHTML = `
+        if (setupScreen) setupScreen.remove();
+        if (gameScreen) gameScreen.remove();
+        if (endScreen) endScreen.remove();
+
+        const newEndScreen = document.createElement('div');
+        newEndScreen.className = 'end-screen';
+        newEndScreen.innerHTML = `
             <div class="end-content">
                 <h1>Game Over, <span class="winner-name">${winner}</span> Wins!</h1>
                 <div class="final-scores">
                     <div class="final-score-item">
-                        <span>${this.player1Name}</span>
+                        <span style="background-color: ${this.player1Color}; padding: 2px 6px; border-radius: 3px; color: white;">${this.player1Name}</span>
                         <span>${this.score.player1} points</span>
                     </div>
                     <div class="final-score-item">
-                        <span>${this.player2Name}</span>
+                        <span style="background-color: ${this.player2Color}; padding: 2px 6px; border-radius: 3px; color: white;">${this.player2Name}</span>
                         <span>${this.score.player2} points</span>
                     </div>
                 </div>
@@ -240,16 +328,17 @@ export class Game {
             </div>
         `;
 
-        this.gameContainer.appendChild(endScreen);
+        this.gameContainer.appendChild(newEndScreen);
 
         document.getElementById('play-again-btn').addEventListener('click', () => {
             this.score = { player1: 0, player2: 0 };
             this.currentPlayer = 1;
+            this.currentRound = 1;
             this.renderGameScreen();
         });
 
         document.getElementById('exit-btn').addEventListener('click', () => {
-            location.reload();
+            this.exitToMenu();
         });
     }
 }
