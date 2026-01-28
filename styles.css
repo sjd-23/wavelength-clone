@@ -282,6 +282,12 @@ body {
     transform: none;
 }
 
+.left-panel .game-btn {
+    width: 200px;
+    margin-bottom: 0;
+    text-align: center;
+}
+
 .prompt-display {
     display: flex;
     align-items: center;
@@ -318,15 +324,25 @@ body {
     padding-right: 10px;
 }
 
+.left-panel {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 10;
+    align-items: center;
+}
+
 .phase-indicator {
+    width: 220px;
     font-size: 32px;
     font-weight: 700;
     color: white;
-    margin-bottom: 25px;
     padding-bottom: 3px;
     text-align: center;
     border-bottom: 5px solid white;
-    display: inline-block;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
@@ -341,21 +357,14 @@ body {
     margin-top: 1px;
 }
 
+
 .scoreboard {
-    position: absolute;
-    top: 10px;
-    right: 10px;
     background: white;
     padding: 12px;
     box-shadow: 0 2px 6px rgba(0, 22, 92, 0.15);
-    width: 140px;
-    opacity: 0.3;
+    width: 200px;
+    opacity: 0.9;
     transition: opacity 0.1s ease;
-    z-index: 10;
-}
-
-.scoreboard:hover {
-    opacity: 1;
 }
 
 .scoreboard h2 {
