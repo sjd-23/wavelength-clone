@@ -10,6 +10,36 @@ export class Dial {
 
     randomizeTarget() {
         this.targetAngle = Math.random() * 180;
+        this.updateTargetZones();
+    }
+
+    updateTargetZones() {
+        const polarToCartesian = (centerX, centerY, radius, angleInDegrees) => {
+            const angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
+            return {
+                x: centerX + (radius * Math.cos(angleInRadians)),
+                y: centerY + (radius * Math.sin(angleInRadians))
+            };
+        };
+
+        const createWedge = (startAngle, endAngle) => {
+            const offset = this.targetAngle - 90;
+            const adjustedStart = startAngle + offset;
+            const adjustedEnd = endAngle + offset;
+            const start = polarToCartesian(350, 350, 300, adjustedEnd);
+            const end = polarToCartesian(350, 350, 300, adjustedStart);
+            const largeArcFlag = adjustedEnd - adjustedStart <= 180 ? "0" : "1";
+            return `M 350 350 L ${start.x} ${start.y} A 300 300 0 ${largeArcFlag} 0 ${end.x} ${end.y} Z`;
+        };
+
+        const zones = this.container.querySelectorAll('.target-zone');
+        if (zones.length === 5) {
+            zones[0].setAttribute('d', createWedge(-10, -6));
+            zones[1].setAttribute('d', createWedge(-6, -2));
+            zones[2].setAttribute('d', createWedge(-2, 2));
+            zones[3].setAttribute('d', createWedge(2, 6));
+            zones[4].setAttribute('d', createWedge(6, 10));
+        }
     }
 
     hideCover() {
@@ -78,23 +108,23 @@ export class Dial {
                   stroke="none"/>
             
             <g clip-path="url(#dial-clip)">
-                <path d="${createWedge(-10, -6)}" 
+                <path class="target-zone" d="${createWedge(-10, -6)}" 
                       fill="#fcbf49" 
                       stroke="none"/>
                 
-                <path d="${createWedge(-6, -2)}" 
+                <path class="target-zone" d="${createWedge(-6, -2)}" 
                       fill="#f77f00" 
                       stroke="none"/>
                 
-                <path d="${createWedge(-2, 2)}" 
+                <path class="target-zone" d="${createWedge(-2, 2)}" 
                       fill="#457b9d" 
                       stroke="none"/>
                 
-                <path d="${createWedge(2, 6)}" 
+                <path class="target-zone" d="${createWedge(2, 6)}" 
                       fill="#f77f00" 
                       stroke="none"/>
                 
-                <path d="${createWedge(6, 10)}" 
+                <path class="target-zone" d="${createWedge(6, 10)}" 
                       fill="#fcbf49" 
                       stroke="none"/>
             </g>
@@ -102,7 +132,7 @@ export class Dial {
             <path id="dial-cover" d="M 50 350 A 300 300 0 0 1 650 350 Z" 
                   fill="#4ecdc4" 
                   stroke="none"
-                  style="transition: opacity 0.15s ease;"/>
+                  style="transition: opacity 0.3s ease;"/>
             
             <path d="M 50 350 A 300 300 0 0 1 650 350" 
                   fill="none" 
